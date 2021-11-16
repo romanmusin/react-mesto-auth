@@ -1,4 +1,5 @@
 import React from "react";
+import { BrowserRouter, Route, Switch, useHistory} from 'react-router-dom';
 import "../index.css";
 import Header from "./Header";
 import Main from "./Main";
@@ -10,6 +11,7 @@ import EditProfilePopup from "./EditProfilePopup";
 import EditAvatarPopup from "./EditAvatarPopup";
 import AddPlacePopup from "./AddPlacePopup";
 import DeleteCardPopup from "./DeleteCardPopup";
+import Login from "./Login";
 
 const App = () => {
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] =
@@ -144,8 +146,10 @@ const App = () => {
 
   return (
     <div className="page">
+      <BrowserRouter>
       <CurrentUserContext.Provider value={currentUser}>
         <Header />
+        <Login />
         <Main
           onEditProfile={handleEditProfileClick}
           onAddPlace={handleAddPlaceClick}
@@ -184,6 +188,7 @@ const App = () => {
 
         <ImagePopup item={selectedCard} onClose={closeAllPopups} />
       </CurrentUserContext.Provider>
+      </BrowserRouter>
     </div>
   );
 };
