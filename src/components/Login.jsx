@@ -7,7 +7,7 @@
     const history = useHistory();
 
     React.useEffect(() => {
-        if (localStorage.getItem(jwt)) {
+        if (localStorage.getItem('jwt')) {
             history.push('/');
         }
     }, [])

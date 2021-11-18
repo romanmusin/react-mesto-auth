@@ -1,56 +1,63 @@
 import React from "react";
-import { Link, useHistory } from 'react-router-dom';
-import successReg from '../images/successReg.svg';
-import failedReg from '../images/failedReg.svg';
+import { Link } from "react-router-dom";
+//import successReg from "../images/successReg.svg";
+//import failedReg from "../images/failedReg.svg";
 
-function Register ({ onRegister, setIsInfoTooltip, setImgInfoTooltip, setTextInfoTooltip }) {
+function Register({ onRegister }) {
 
-    const [email, setEmail] = React.useState('');
-    const [password, setPassword] = React.useState('')
-    const history = useHistory()
+  const [userEmail, setUserEmail] = React.useState("");
+  function handleChangeUserEmail(evt) {
+    setUserEmail(evt.target.value);
+  }
 
-    function handleChangeName (evt) {
-        setEmail(evt.target.value)
-    }
+  const [userPassword, setUserPassword] = React.useState("");
+  function handleChangeUserPassword(evt) {
+    setUserPassword(evt.target.value);
+  }
 
-    function handleChangePassword (evt) {
-        setPassword(evt.target.value)
-    }
+  function handleSubmit(evt) {
+    evt.preventDefault();
 
-    function handleSubmit (evt) {
-        evt.preventDefault()
-        setIsInfoTooltip(true)
-        onRegister({email, password})
-            .then(() => {
-                
-                    setEmail('')
-                    setPassword('')
-                    setTextInfoTooltip('Вы успешно зарегестрировались')
-                    setImgInfoTooltip(successReg)
-                    history.push('/sing-in')
-            })
-            
-            .catch((err) => {
-                setImgInfoTooltip(failedReg)
-                setTextInfoTooltip('Что-то пошло не так! Попробуйте ещё раз.')
-                console.log(err)
-            })
-    }
+    onRegister({
+      password: userPassword,
+      email: userEmail,
+    });
+    setUserEmail("");
+    setUserPassword("");
+  }
 
-    return (
-        <div className="login">
-            <h2 className="login__title"> Регистрация </h2>
-            <form className="login__form" onSubmit={handleSubmit}>
-                <input type="email" id="email" className="login__input" placeholder="Email" onChange={handleChangeName} value={email}/>
-                <input type="password" id="password" className="login__input"  placeholder="Пароль" onChange={handleChangePassword} value={password}/>
-                <button type="submit" className="login__button">Зарегестрироваться</button>
-            </form>
-               
-            <p>Уже зарегестрированы? 
-                <Link to="/sing-in" className="login__link"> Войти </Link>
-            </p>
-        </div>
-    )
+  return (
+    <div className="login">
+      <h2 className="login__title"> Регистрация </h2>
+      <form className="login__form" onSubmit={handleSubmit}>
+        <input
+          type="email"
+          id="email"
+          className="login__input"
+          placeholder="Email"
+          onChange={handleChangeUserEmail}
+          value={userEmail}
+        />
+        <input
+          type="password"
+          id="password"
+          className="login__input"
+          placeholder="Пароль"
+          onChange={handleChangeUserPassword}
+          value={userPassword}
+        />
+        <button type="submit" className="login__button">
+          Зарегестрироваться
+        </button>
+      </form>
+
+      <div className="login__link">
+        <Link className="login__link_sign" to="sign-in">
+          Уже зарегистрированы? Войти
+        </Link>
+      </div>
+    </div>
+  );
 }
 
 export default Register;

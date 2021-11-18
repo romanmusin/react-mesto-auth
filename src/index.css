@@ -20,9 +20,9 @@
 @import url('./blocks/popup/__image-pic/popup__image-pic.css');
 @import url('./blocks/popup/__image-text/poopup__image-text.css');
 @import url('./blocks/popup/__image-close/popup__image-close.css');
+@import url('./blocks/popup/__info/popup__info.css');
 
 @import url('./blocks/header/header.css');
-@import url('./blocks/header/__logo/header__logo.css');
 
 @import url('./blocks/profile/profile.css');
 
@@ -31,3 +31,5 @@
 
 @import url('./blocks/footer/footer.css');
 @import url('./blocks/footer/__text/footer__text.css');
+
+@import url('./blocks/login/login.css');
