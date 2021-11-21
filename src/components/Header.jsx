@@ -3,12 +3,6 @@ import logo from "../images/header_logo.svg";
 import { Route, Link } from "react-router-dom";
 
 const Header = ({ email, onSignOut }) => {
-
-  
-  function handleSignOut() {
-    onSignOut();
-  }
-
   return (
     <header className="header">
       <img src={logo} alt="Логотип" className="header__logo" />
@@ -25,7 +19,7 @@ const Header = ({ email, onSignOut }) => {
         </Route>
         <Route exact path="/">
           <p className="header__email">{email}</p>
-          <button onClick={handleSignOut} className="header__signout">
+          <button onClick={onSignOut} className="header__signout">
             Выйти
           </button>
         </Route>

@@ -1,5 +1,5 @@
 import React from "react";
-import { Route, Switch, useHistory } from "react-router-dom";
+import { Route, Redirect, Switch, useHistory } from "react-router-dom";
 import "../index.css";
 import Header from "./Header";
 import Main from "./Main";
@@ -33,8 +33,8 @@ const App = () => {
   const [cards, setCards] = React.useState([]);
   const [loggedIn, setLoggedIn] = React.useState(false);
   const [isInfoTooltipOpen, setIsInfoTooltipOpen] = React.useState(false);
-  const [message, setMessage] = React.useState({image: "", text: ""});
-  const [userEmail, setUserEmail] = React.useState('email');
+  const [message, setMessage] = React.useState({ image: "", text: "" });
+  const [userEmail, setUserEmail] = React.useState("email");
   const history = useHistory();
 
   const handleEditProfileClick = () => setIsEditProfilePopupOpen(true);
@@ -46,7 +46,7 @@ const App = () => {
     setSelectedCardDelete(item);
   }
 
-  function onCardClick(item) {
+  function handleCardClick(item) {
     setSelectedCard(item);
   }
 
@@ -66,9 +66,13 @@ const App = () => {
         setCurrentUser(userInfo);
         setCards(loadCards);
       })
+
       .catch((err) => console.log(err));
-    checkToken();
   }, []);
+
+  React.useEffect(() => {
+    checkToken();
+  });
 
   //Удаление Карточки
   function handleDeleteCard(card) {
@@ -157,14 +161,11 @@ const App = () => {
     return () => document.removeEventListener("keyup", handleCloseByEscape);
   }, []);
 
-  
-  
-
   function checkToken() {
-    if (localStorage.getItem("jwt")) {
-      const jwt = localStorage.getItem("jwt");
+    const jwt = localStorage.getItem("jwt");
+    if (jwt) {
       auth
-        .checkingToken(jwt)
+        .checkToken(jwt)
         .then((res) => {
           setUserEmail(res.data.email);
           setLoggedIn(true);
@@ -176,20 +177,45 @@ const App = () => {
     }
   }
 
+  React.useEffect(() => {
+    if (localStorage.getItem("jwt")) {
+      history.push("/");
+    }
+  }, [history]);
+
   const handleRegister = ({ password, email }) => {
-    return auth
+    auth
       .register(password, email)
       .then((dataReg) => {
         if (dataReg.data._id || dataReg.statusCode !== 400) {
           setUserEmail(dataReg.data.email);
           history.push("/sign-in");
-          setIsInfoTooltipOpen(true);
           setMessage({
             image: successReg,
             text: "Вы успешно зарегистрировались!",
           });
-        } else {
-          return;
+        }
+      })
+      .catch((err) => {
+        setMessage({
+          image: failedReg,
+          text: "Что-то пошло не так! Попробуйте ещё раз.",
+        });
+      })
+      .finally(() => {
+        setIsInfoTooltipOpen(true);
+      });
+  };
+
+  const handleLogin = ({ password, email }) => {
+    auth
+      .login(password, email)
+      .then((dataLog) => {
+        if (dataLog.token || dataLog.statusCode === 200) {
+          setLoggedIn(true);
+          localStorage.setItem("jwt", dataLog.token);
+          history.push("/");
+          setUserEmail(email);
         }
       })
       .catch((err) => {
@@ -201,36 +227,16 @@ const App = () => {
       });
   };
 
-  const handleLogin = ({ password, email }) => {
-    return auth.authorization(password, email)
-    .then(dataLog => {
-      if (dataLog.token || dataLog.statusCode === 200) {
-        setLoggedIn(true);
-        localStorage.setItem('jwt', dataLog.token);
-        history.push('/');
-        setUserEmail(email);
-      } else {
-        setIsInfoTooltipOpen(true);
-        setMessage({ image: failedReg, text: 'Что-то пошло не так! Попробуйте ещё раз.' });
-      }
-    })
-    .catch(err => console.log(err));
-  };
-
   const onSignOut = () => {
-    localStorage.removeItem('jwt');
+    localStorage.removeItem("jwt");
     setLoggedIn(false);
-    history.push('/sign-in');
-  }
-
+    history.push("/sign-in");
+  };
 
   return (
     <div className="page">
       <CurrentUserContext.Provider value={currentUser}>
-        <Header 
-              email={userEmail}
-              onSignOut={onSignOut}
-               />
+        <Header email={userEmail} onSignOut={onSignOut} />
         <Switch>
           <ProtectedRoute
             exact
@@ -240,7 +246,7 @@ const App = () => {
             onEditAvatar={handleEditAvatarClick}
             onEditProfile={handleEditProfileClick}
             onAddPlace={handleAddPlaceClick}
-            onCardClick={onCardClick}
+            onCardClick={handleCardClick}
             cards={cards}
             onCardLike={handleCardLike}
             onClickDeleteCard={handleClickDeleteCard}
@@ -250,6 +256,9 @@ const App = () => {
           </Route>
           <Route path="/sign-up">
             <Register onRegister={handleRegister} />
+          </Route>
+          <Route path="*">
+            {loggedIn ? <Redirect to="/" /> : <Redirect to="/sign-in" />}
           </Route>
         </Switch>
 

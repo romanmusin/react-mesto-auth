@@ -4,13 +4,12 @@ import { Link } from "react-router-dom";
 //import failedReg from "../images/failedReg.svg";
 
 function Register({ onRegister }) {
-
+  const [userPassword, setUserPassword] = React.useState("");
   const [userEmail, setUserEmail] = React.useState("");
   function handleChangeUserEmail(evt) {
     setUserEmail(evt.target.value);
   }
 
-  const [userPassword, setUserPassword] = React.useState("");
   function handleChangeUserPassword(evt) {
     setUserPassword(evt.target.value);
   }
@@ -22,8 +21,6 @@ function Register({ onRegister }) {
       password: userPassword,
       email: userEmail,
     });
-    setUserEmail("");
-    setUserPassword("");
   }
 
   return (
@@ -47,7 +44,7 @@ function Register({ onRegister }) {
           value={userPassword}
         />
         <button type="submit" className="login__button">
-          Зарегестрироваться
+          Зарегистрироваться
         </button>
       </form>
 

@@ -14,20 +14,17 @@ export function register(password, email) {
   }).then(getResponse);
 }
 
-export function authorization(password, email) {
+export function login(password, email) {
   return fetch(`${baseUrl}/signin`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({
-      password: password,
-      email: email,
-    }),
+    body: JSON.stringify({ password, email }),
   }).then(getResponse);
 }
 
-export function checkingToken(token) {
+export function checkToken(token) {
   return fetch(`${baseUrl}/users/me`, {
     method: "GET",
     headers: {
