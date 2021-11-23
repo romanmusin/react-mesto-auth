@@ -11,7 +11,7 @@
   "bugs": {
     "url": "https://github.com/romanmusin/react-mesto-auth/issues"
   },
-  "homepage": "https://romanmusin.github.io/react-mesto/#/",
+  "homepage": "https://romanmusin.github.io/react-mesto-auth/",
   "dependencies": {
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^11.2.7",
