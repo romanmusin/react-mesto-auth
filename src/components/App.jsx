@@ -1,6 +1,5 @@
 import React from "react";
 import { Route, Redirect, Switch, useHistory } from "react-router-dom";
-import "../index.css";
 import Header from "./Header";
 import Main from "./Main";
 import Footer from "./Footer";
@@ -31,7 +30,7 @@ const App = () => {
   const [selectedCardDelete, setSelectedCardDelete] = React.useState(null);
   const [currentUser, setCurrentUser] = React.useState({});
   const [cards, setCards] = React.useState([]);
-  const [loggedIn, setLoggedIn] = React.useState(false);
+  const [isLoggedIn, setIsLoggedIn] = React.useState(false);
   const [isInfoTooltipOpen, setIsInfoTooltipOpen] = React.useState(false);
   const [message, setMessage] = React.useState({ image: "", text: "" });
   const [userEmail, setUserEmail] = React.useState("email");
@@ -61,14 +60,15 @@ const App = () => {
   };
 
   React.useEffect(() => {
-    Promise.all([api.getUserInfo(), api.getCardsInfo()])
+    if (isLoggedIn) {
+      Promise.all([api.getUserInfo(), api.getCardsInfo()])
       .then(([userInfo, loadCards]) => {
         setCurrentUser(userInfo);
         setCards(loadCards);
       })
-
       .catch((err) => console.log(err));
-  }, []);
+    }
+  }, [isLoggedIn]);
 
   React.useEffect(() => {
     checkToken();
@@ -168,7 +168,7 @@ const App = () => {
         .checkToken(jwt)
         .then((res) => {
           setUserEmail(res.data.email);
-          setLoggedIn(true);
+          setIsLoggedIn(true);
           history.push("/");
         })
         .catch((err) => {
@@ -212,7 +212,7 @@ const App = () => {
       .login(password, email)
       .then((dataLog) => {
         if (dataLog.token || dataLog.statusCode === 200) {
-          setLoggedIn(true);
+          setIsLoggedIn(true);
           localStorage.setItem("jwt", dataLog.token);
           history.push("/");
           setUserEmail(email);
@@ -229,7 +229,7 @@ const App = () => {
 
   const onSignOut = () => {
     localStorage.removeItem("jwt");
-    setLoggedIn(false);
+    setIsLoggedIn(false);
     history.push("/sign-in");
   };
 
@@ -241,7 +241,7 @@ const App = () => {
           <ProtectedRoute
             exact
             path="/"
-            isLoggedIn={loggedIn}
+            isLoggedIn={isLoggedIn}
             component={Main}
             onEditAvatar={handleEditAvatarClick}
             onEditProfile={handleEditProfileClick}
@@ -258,11 +258,11 @@ const App = () => {
             <Register onRegister={handleRegister} />
           </Route>
           <Route path="*">
-            {loggedIn ? <Redirect to="/" /> : <Redirect to="/sign-in" />}
+            {isLoggedIn ? <Redirect to="/" /> : <Redirect to="/sign-in" />}
           </Route>
         </Switch>
 
-        {loggedIn && <Footer />}
+        {isLoggedIn && <Footer />}
 
         <EditProfilePopup //Попап редактирования профиля
           isOpen={isEditProfilePopupOpen}
