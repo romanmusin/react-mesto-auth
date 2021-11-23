@@ -7,8 +7,9 @@
     border: none;
     width: 50px;
     height: 50px;
-    margin-top: -45px;
-    margin-left: 425px;
+    margin-top: 155px;
+    margin-left: 485px;
+    margin-bottom: -100px;
     padding: 0;
     box-sizing: border-box;
 }
@@ -21,10 +22,11 @@
 
 @media screen and (max-width: 767px) {
     .popup__close-button {
-        width: 26px;
-        height: 26px;
+        width: 35px;
+        height: 35px;
         margin: 0;
+        margin-top: 86px;
         margin-left: 260px;
-        margin-top: -10px;
+        margin-bottom: -120px;
     }
 }

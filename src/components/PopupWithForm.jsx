@@ -3,12 +3,12 @@ import React from "react";
 const PopupWithForm = (props) => {
   return (
     <div className={`popup ${props.isOpen ? `popup_visible` : ""}`}>
+      <button
+        type="button"
+        className="popup__close-button"
+        onClick={props.onClose}
+      ></button>
       <div className="popup__content">
-        <button
-          type="button"
-          className="popup__close-button"
-          onClick={props.onClose}
-        ></button>
         <h2 className="popup__header">{props.title}</h2>
         <form
           name={props.name}
